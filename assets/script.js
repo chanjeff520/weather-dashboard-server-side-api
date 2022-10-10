@@ -8,15 +8,16 @@ function validate(cityInfo){
     
     if(cityInfo === ""){
         alert("Please input a city");
-        return;
+        return false;
     }
+    return true;
 }
 
-//not finished
+//not finished exclude hour
 function getApi(cityinfo){
-    var weatherApiLink = "http://api.openweathermap.org/data/2.5/forecast?q=" + cityinfo +"&appid=580736b4e81d6ca498d989b1ea6ba5b1";
-    var long;
-    var lat;
+    var weatherApiLink = "http://api.openweathermap.org/data/2.5/forecast?q=" + cityinfo +"&units=imperial&appid=580736b4e81d6ca498d989b1ea6ba5b1";
+
+    
     fetch(weatherApiLink)
     .then(function(response){
         if(response.ok){
@@ -31,25 +32,27 @@ function getApi(cityinfo){
     })
 }
 
-//not tested
+//adds a new button with an event listener below the search button
 function makeCityBtn(){
-    var newCityBtn = document.createElement("button");
     var cityInfo = document.getElementById("input-city");
-    newCityBtn.setAttribute("class", "mx-auto mb-1 btn-block")
-    newCityBtn.textContent = cityInfo.value;
-    newCityBtn.onclick =onclickHistoryBtn ;
+    if(validate(cityInfo.value)){
+        var newCityBtn = document.createElement("button");
+        newCityBtn.setAttribute("class", "mx-auto mb-1 btn-block")
+        newCityBtn.textContent = cityInfo.value;
+        newCityBtn.onclick = onclickHistoryBtn ;
 
-    document.getElementById("saved-cities").appendChild(newCityBtn);
+        document.getElementById("saved-cities").appendChild(newCityBtn);
+    }
 }
+
+// targets the button that was clicked, then pass the text content of the button onto getApi function
 function onclickHistoryBtn(event) {
     console.log(event.target);
-    console.log(event.target.textContent);
     getApi(event.target.textContent);
 }
 
 function renderCity(){
     var cityInfo = document.getElementById("input-city").value;
-    validate(cityInfo);
     getApi(cityInfo)
 }
 
