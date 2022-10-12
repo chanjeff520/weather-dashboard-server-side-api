@@ -17,12 +17,16 @@ function validate(cityInfo){
     return true;
 }
 
-//not finished exclude hour
+//OpenWeatherMap API call
 function getApi(cityinfo){
-    var weatherApiLink = "https://api.openweathermap.org/data/2.5/forecast?q=" + cityinfo +"&units=imperial&appid=580736b4e81d6ca498d989b1ea6ba5b1";
-    //var currentWeatherApi
-    
+    //asked for imperial Units instead of calvins. Also using the 5-day forecast
+    var weatherApiLink =    "https://api.openweathermap.org/data/2.5/forecast?q=" + cityinfo +
+                            "&units=imperial&appid=580736b4e81d6ca498d989b1ea6ba5b1";
+
+    //The fetch call calls the api by the link that is stored inside
+    //  the variable weatherApiLink
     fetch(weatherApiLink)
+    //checks if the response is valid, anything 400 or above will return a not ok
     .then(function(response){
         if(response.ok){
             return response.json();
@@ -31,8 +35,11 @@ function getApi(cityinfo){
             return;
         }
     })
+    //the data is the search parameters that we gave the api
     .then(function(data){
+        //clears the display that is on the screen
         clearDisplay();
+        //renders the display given the data needed
         renderWeather(data);
     })
 }
