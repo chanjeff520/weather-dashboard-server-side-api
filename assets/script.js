@@ -13,6 +13,7 @@ function validate(cityInfo){
         alert("Please input a different City that's not in the saved area");
         return false
     }
+
     return true;
 }
 
@@ -31,7 +32,6 @@ function getApi(cityinfo){
         }
     })
     .then(function(data){
-        console.log(data);
         clearDisplay();
         renderWeather(data);
     })
@@ -46,21 +46,19 @@ function makeCityBtn(){
         newCityBtn.textContent = cityInfo.value;
         newCityBtn.onclick = onclickHistoryBtn ;
 
-        city.push(newCityBtn.textContent);
+        //adds a new city on to the array city
+        addCityToList(newCityBtn.textContent);
 
+        //appendsd the city btn to save-cities div
         document.getElementById("saved-cities").appendChild(newCityBtn);
+
+        getApi(newCityBtn.textContent);
     }
 }
 
 // targets the button that was clicked, then pass the text content of the button onto getApi function
 function onclickHistoryBtn(event) {
-    console.log(event.target);
     getApi(event.target.textContent);
-}
-
-function renderCity(){
-    var cityInfo = document.getElementById("input-city").value;
-    getApi(cityInfo)
 }
 
 //renders current weather
@@ -104,7 +102,7 @@ function renderWeather(data){
         var wind = document.createElement("p");
         var humidity = document.createElement("p");
 
-        divEl.setAttribute("class", "d-inline col-2 bg-info bg-gradient mx-1");
+        divEl.setAttribute("class", "d-inline row-col-2 bg-info bg-gradient mx-2 px-1");
         date.textContent = moment.unix(data.list[i].dt).format("MM/D/YYYY");
         icon.setAttribute("src", "http://openweathermap.org/img/w/"+ data.list[i].weather[0].icon + ".png");
         temp.textContent = "Temperature: "+data.list[i].main.temp + "°F";
@@ -133,15 +131,35 @@ function clearDisplay(){
     }
 }
 
+//loads all the button from the side if there is local data of it
 function loadBtns(){
+    //get data from localStorage
+    city = JSON.parse(localStorage.getItem('cityList'));
+    //checks if there is local storages of cities
+    if(city == null){
+        city = [];
+        return;
+    }else{
+        for(var i = 0; i < city.length; i++){
+            var newCityBtn = document.createElement("button");
 
+            newCityBtn.setAttribute("class", "mx-auto mb-1 btn-block")
+            newCityBtn.textContent = city[i];
+            newCityBtn.onclick = onclickHistoryBtn;
+            document.getElementById("saved-cities").appendChild(newCityBtn);
+        }
+    }
 }
 
+//add a new city to the list, then save to local data
 function addCityToList(cityName){
     city.push(cityName);
-    JSON.stringify("cityList", city);
-
+    localStorage.setItem("cityList",JSON.stringify(city));
 }
 
+function init(){
+    loadBtns();
+}
 
 document.getElementById("enter-btn").addEventListener("click", makeCityBtn);
+init();
