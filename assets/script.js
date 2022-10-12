@@ -19,7 +19,7 @@ function validate(cityInfo){
 
 //not finished exclude hour
 function getApi(cityinfo){
-    var weatherApiLink = "http://api.openweathermap.org/data/2.5/forecast?q=" + cityinfo +"&units=imperial&appid=580736b4e81d6ca498d989b1ea6ba5b1";
+    var weatherApiLink = "https://api.openweathermap.org/data/2.5/forecast?q=" + cityinfo +"&units=imperial&appid=580736b4e81d6ca498d989b1ea6ba5b1";
     //var currentWeatherApi
     
     fetch(weatherApiLink)
@@ -61,8 +61,9 @@ function onclickHistoryBtn(event) {
     getApi(event.target.textContent);
 }
 
-//renders current weather
+//renders all of the weather display
 function renderWeather(data){
+    //renders current weather display
     var currentWeatherEl = document.getElementById("current-weather");
     var cityName = document.createElement("h2");
     var icon = document.createElement("img");
@@ -72,7 +73,7 @@ function renderWeather(data){
 
     cityName.textContent = data.city.name + " (" + moment.unix(data.list[0].dt).format("MM/D/YYYY") + ")";
     cityName.setAttribute("class", "d-inline");
-    icon.setAttribute("src", "http://openweathermap.org/img/w/"+ data.list[0].weather[0].icon + ".png");
+    icon.setAttribute("src", "https://openweathermap.org/img/w/"+ data.list[0].weather[0].icon + ".png");
     icon.setAttribute("class","d-inline");
     temp.textContent = "Temperature: "+data.list[0].main.temp + "°F";
     wind.textContent = "Wind speed: "+data.list[0].wind.speed + " mph";
@@ -104,7 +105,7 @@ function renderWeather(data){
 
         divEl.setAttribute("class", "d-inline row-col-2 bg-info bg-gradient mx-2 px-1");
         date.textContent = moment.unix(data.list[i].dt).format("MM/D/YYYY");
-        icon.setAttribute("src", "http://openweathermap.org/img/w/"+ data.list[i].weather[0].icon + ".png");
+        icon.setAttribute("src", "https://openweathermap.org/img/w/"+ data.list[i].weather[0].icon + ".png");
         temp.textContent = "Temperature: "+data.list[i].main.temp + "°F";
         wind.textContent = "Wind speed: "+data.list[i].wind.speed + " mph";
         humidity.textContent = "Humidity: "+data.list[i].main.humidity + "%";
