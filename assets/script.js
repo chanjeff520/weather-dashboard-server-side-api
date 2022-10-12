@@ -32,6 +32,7 @@ function getApi(cityinfo){
     })
     .then(function(data){
         console.log(data);
+        clearDisplay();
         renderWeather(data);
     })
 }
@@ -84,6 +85,52 @@ function renderWeather(data){
     currentWeatherEl.appendChild(temp);
     currentWeatherEl.appendChild(wind);
     currentWeatherEl.appendChild(humidity);
+
+    //makes the forecast title
+    var forecastTitle = document.getElementById("forecast-banner")
+    var fiveTitle = document.createElement("h3");
+    fiveTitle.textContent = "5-Day Forecast:";
+    forecastTitle.appendChild(fiveTitle);
+
+    //For the 5-day weather display
+    var fiveDayWeather = document.getElementById("five-day-weather");
+    fiveDayWeather.setAttribute("class", "row");
+
+    for(var i = 7; i<data.list.length; i+=8){
+        var divEl = document.createElement("div");
+        var date = document.createElement("h4")
+        var icon = document.createElement("img");
+        var temp = document.createElement("p");
+        var wind = document.createElement("p");
+        var humidity = document.createElement("p");
+
+        divEl.setAttribute("class", "d-inline col-2 bg-info bg-gradient mx-1");
+        date.textContent = moment.unix(data.list[i].dt).format("MM/D/YYYY");
+        icon.setAttribute("src", "http://openweathermap.org/img/w/"+ data.list[i].weather[0].icon + ".png");
+        temp.textContent = "Temperature: "+data.list[i].main.temp + "°F";
+        wind.textContent = "Wind speed: "+data.list[i].wind.speed + " mph";
+        humidity.textContent = "Humidity: "+data.list[i].main.humidity + "%";
+
+        divEl.appendChild(date);
+        divEl.appendChild(icon);
+        divEl.appendChild(temp);
+        divEl.appendChild(wind);
+        divEl.appendChild(humidity);
+        fiveDayWeather.appendChild(divEl);
+    }
+}
+
+//clear the display screen before loading a new one
+function clearDisplay(){
+     var elements = [document.getElementById("current-weather"), 
+                    document.getElementById("forecast-banner"),
+                    document.getElementById("five-day-weather")];
+
+    for(var i = 0; i<elements.length; i++){
+        while (elements[i].hasChildNodes()){
+            elements[i].removeChild(elements[i].firstChild);
+        }
+    }
 }
 
 function loadBtns(){
@@ -93,6 +140,7 @@ function loadBtns(){
 function addCityToList(cityName){
     city.push(cityName);
     JSON.stringify("cityList", city);
+
 }
 
 
